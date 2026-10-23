@@ -15,4 +15,3 @@ test("mirror opens the GitLab MR with the pushed commit's subject and body", () 
 test("mirror never hard-codes an MR title", () => {
   assert.doesNotMatch(openStep, /--data-urlencode "title=[^$]/);
 });
-
