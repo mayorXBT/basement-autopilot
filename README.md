@@ -1,10 +1,35 @@
-# Basement
+# Basement Autopilot
 
-Basement is an anonymous impromptu speaking practice app. Spin a topic, speak for a minute, and get delivery-focused coaching without creating an account.
+Basement Autopilot is a supervised GitLab CI/CD lifecycle, with bounded agent help, built around [Basement](https://basement.cefo.dev) — an anonymous impromptu speaking practice app. Spin a topic, speak for a minute, and get delivery-focused coaching without creating an account.
 
-Basement runs on Vercel at [basement.cefo.dev](https://basement.cefo.dev). The Autopilot branch has a [green GitLab pipeline](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/pipelines/2979681253) for Verify, Secure, and Package; the production stage checks the existing Vercel deployment and never requires Google Cloud variables. See [PROGRESS.md](PROGRESS.md) before repeating any autonomy claim.
+This repository is a public GitHub showcase of the GitLab AI Hackathon **"Life After Code"** (Transcend, October 2026) entry, so hiring managers can inspect the code, the pipelines, and the evidence. Continuous integration runs on GitLab, not GitHub. The live app stays on Vercel; GitLab checks that deployment and does not deploy it.
 
-## Basement Autopilot in one picture
+- **Devpost:** [devpost.com/software/basement-autopilot](https://devpost.com/software/basement-autopilot)
+- **Demo video:** [youtu.be/Pzs5F1gSvks](https://youtu.be/Pzs5F1gSvks)
+- **Live app:** [basement.cefo.dev](https://basement.cefo.dev)
+- **Original GitLab repo:** [gitlab-ai-hackathon/.../showcase](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase)
+
+See [PROGRESS.md](PROGRESS.md) and [docs/STAGES.md](docs/STAGES.md) before repeating any autonomy claim.
+
+## Why it's useful
+
+**The problem.** Teams shipping software still have to stitch planning, review, tests, security, packaging, release evidence, production checks, monitoring, and governance by hand. Privacy promises often live in a policy doc with no machine check. AI coding agents can open merge requests, but they are easy to trust with shipping gates they should not own.
+
+**Who it's for.** Platform, DevOps, and application teams who want AI help inside a real delivery pipeline — especially on privacy-sensitive products — without giving the model the final say.
+
+**What you get in practice.**
+
+- One GitLab pipeline that covers all nine software lifecycle stages, with opened run evidence for **9/9**. Plan and Create are proven as GitLab work artifacts (an issue and a merged MR), not as Duo execution.
+- Deterministic jobs, not the model, own the shipping gates: tests, privacy canaries, packaging, release receipts, production health checks, and governance comments.
+- Agents may plan, propose bounded fixes, and explain results under supervision. This submission is Path B, Supervised; hands-off delivery is not claimed.
+- A speaking app whose privacy promises (no stored audio, no speech logs, no accounts or tracking) are checked in CI and against the live site.
+- **Duo/AI Catalog execution is pending.** The flow source exists; no Duo session or Duo-authored Builder MR was captured, and that run is not one of the nine stages.
+
+## Tech stack
+
+GitLab CI/CD, GitLab Duo Agent Platform (flow source only; execution pending), Node.js, Express, Docker, Vercel, Gemini, Deepgram, and Groq.
+
+## How it works
 
 ```mermaid
 flowchart LR
@@ -26,19 +51,21 @@ Agents plan, change code, fix bounded failures, and explain results. Ordinary de
 
 ## The nine stages
 
+Evidence status: **9/9 stages proven** for a supervised issue-to-production evidence run plus a schedule-sourced Monitor run. Plan and Create are proven as GitLab work artifacts, not as Duo execution. The Duo/AI Catalog run is still pending and is not one of the nine stages. Hands-off delivery is not claimed.
+
 | Stage | Main implementation | Runtime proof |
 |---|---|---|
-| Plan | Duo Conductor Triage | Pending GitLab flow session |
-| Create | Duo Conductor Builder | Pending agent-authored MR |
-| Verify | Unit, syntax, parity, path, and speech-eval jobs | [Passing unit job](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17397617381) |
-| Secure | GitLab scans, privacy rules, canary, and Guard | [Passing privacy canary](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17397617390) |
-| Package | Immutable container image and digest | [Passing registry push](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17397617391) |
-| Release | Version, notes, receipt, ledger, SBOM, and eval report | Pending release URL |
-| Configure | Existing Vercel production environment and smoke check | Pending Vercel job URL |
-| Monitor | Scheduled live synthetic checks against Vercel | [Passing scheduled job](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17441379147) |
-| Govern | Policy, evidence comment, and issue closure | Pending evidence URL |
+| Plan | [Conductor flow](.gitlab/duo/flows/conductor.yaml) | [Issue #4](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/issues/4) records the failure and expected outcome. This does not prove a Duo Triage run. |
+| Create | [Conductor flow](.gitlab/duo/flows/conductor.yaml) | [MR !11](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/merge_requests/11) and its [green MR pipeline](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/pipelines/2984569889). The MR came from the GitHub mirror, not Duo. |
+| Verify | [`verify.yml`](.gitlab/ci/verify.yml) | [Main pipeline](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/pipelines/2984574204), [unit job](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123003), and [six synthetic evals](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123007) |
+| Secure | [`secure.yml`](.gitlab/ci/secure.yml) | [SAST](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123009), [static privacy](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123012), and [runtime canary](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123013) |
+| Package | [`package.yml`](.gitlab/ci/package.yml) | [Package job](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123014) built and pushed the commit-addressed image |
+| Release | [`release.yml`](.gitlab/ci/release.yml) | [v1.0.11 release](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/releases/v1.0.11), [privacy receipt](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123017/artifacts/file/release-assets/privacy-receipt.md), and [passing tag pipeline](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/pipelines/2984578289) |
+| Configure | [`deploy.yml`](.gitlab/ci/deploy.yml) | [`deploy:vercel`](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123018) checked the existing [live Vercel app](https://basement.cefo.dev). GitLab did not deploy Vercel. |
+| Monitor | [`monitor.yml`](.gitlab/ci/monitor.yml) | [Schedule pipeline 2985152954](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/pipelines/2985152954) and [`monitor:synthetic`](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17441379147) |
+| Govern | [`govern.yml`](.gitlab/ci/govern.yml) | [`govern:evidence`](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/jobs/17438123020) and the [issue #4 evidence comment](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/issues/4#note_4082415574) |
 
-The detailed map links every source implementation and distinguishes source from run evidence in [docs/STAGES.md](docs/STAGES.md). The honest runtime count is 9/9 stages; Plan and Create are evidenced by GitLab work items, not Duo execution.
+The detailed map, including disclosed unproven boundaries, is in [docs/STAGES.md](docs/STAGES.md).
 
 ## Privacy promises
 
@@ -69,7 +96,7 @@ The current local baseline passes 6/6 fixtures with `gemini-3.1-flash-lite`, and
 
 In an enabled GitLab project, create an issue from the [`autopilot` template](.gitlab/issue_templates/autopilot.md), describe one small outcome, and keep the `autopilot` label. Triage should post bounded acceptance criteria and Builder should open the linked MR. The demo-only “Add a Job interview niche” feature is intentionally absent from this branch so the flow, not a person, can create it.
 
-For judges: check `PROGRESS.md` first. `AUTOPILOT_PAUSED=1` may intentionally disable agent repair and production changes during judging. The [showcase project](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase) receives this branch through a non-force GitHub Actions mirror; its Duo configuration becomes active only after the branch lands on GitLab's default branch through an MR.
+CI for this project runs on the [original GitLab repo](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase); the GitLab CI configuration in this repository is kept because it is the core of the hackathon entry. For judges: check `PROGRESS.md` first. `AUTOPILOT_PAUSED=1` may intentionally disable agent repair and production changes during judging. The [showcase project](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase) receives this branch through a non-force GitHub Actions mirror; its Duo configuration becomes active only after the branch lands on GitLab's default branch through an MR.
 
 ## Before and after
 
@@ -79,7 +106,7 @@ For judges: check `PROGRESS.md` first. `AUTOPILOT_PAUSED=1` may intentionally di
 | Tests ran only when invoked locally | 57 tests plus syntax, dependency, privacy, eval, and container gates in a [green GitLab pipeline](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/pipelines/2978492394) |
 | Privacy promises were prose | P1-P9 deterministic checks; P10 review-required |
 | No coaching regression suite | Six labelled synthetic fixtures with majority scoring and a protected baseline |
-| No release evidence bundle | Receipt, tamper-evident ledger, SBOM, and eval assets implemented; external release pending |
+| No release evidence bundle | Receipt, tamper-evident ledger, SBOM, and eval assets published with [GitLab release v1.0.11](https://gitlab.com/gitlab-ai-hackathon/transcend-october-2026/43556545/showcase/-/releases/v1.0.11) |
 
 ## What It Does
 
